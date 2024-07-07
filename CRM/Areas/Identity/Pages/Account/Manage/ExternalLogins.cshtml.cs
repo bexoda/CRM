@@ -17,7 +17,7 @@ namespace CRM.Areas.Identity.Pages.Account.Manage
         private readonly IUserStore<AppUser> _userStore;
 
         public ExternalLoginsModel(
-            UserManager<AppUser > userManager,
+            UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IUserStore<AppUser> userStore)
         {
