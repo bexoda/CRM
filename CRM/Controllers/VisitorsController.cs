@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CRM.Data;
+using CRM.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CRM.Data;
-using CRM.Entities;
 
 namespace CRM.Controllers
 {
@@ -62,10 +58,10 @@ namespace CRM.Controllers
             visitor.CreatedDate = DateTime.UtcNow;
             //if (ModelState.IsValid)
             //{
-                _context.Add(visitor);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-           // }
+            _context.Add(visitor);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+            // }
             ViewData["HostId"] = new SelectList(_context.Employees, "Id", "Email", visitor.HostId);
             return View(visitor);
         }
@@ -101,23 +97,23 @@ namespace CRM.Controllers
 
             //if (ModelState.IsValid)
             //{
-                try
+            try
+            {
+                _context.Update(visitor);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!VisitorExists(visitor.Id))
                 {
-                    _context.Update(visitor);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!VisitorExists(visitor.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
             //}
             ViewData["HostId"] = new SelectList(_context.Employees, "Id", "Email", visitor.HostId);
             return View(visitor);

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CRM.Data;
+using CRM.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CRM.Data;
-using CRM.Entities;
 
 namespace CRM.Controllers
 {
@@ -105,23 +101,23 @@ namespace CRM.Controllers
             appointment.UpdatedDate = DateTime.UtcNow;
             //if (ModelState.IsValid)
             //{
-                try
+            try
+            {
+                _context.Update(appointment);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AppointmentExists(appointment.Id))
                 {
-                    _context.Update(appointment);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!AppointmentExists(appointment.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
             //}
             ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Company", appointment.ClientId);
             ViewData["StaffId"] = new SelectList(_context.Employees, "Id", "Email", appointment.StaffId);
