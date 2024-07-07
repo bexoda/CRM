@@ -1,0 +1,69 @@
+﻿@model CRM.Entities.Visitor
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Visitor</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactNumber" class="control-label"></label>
+                <input asp-for="ContactNumber" class="form-control" />
+                <span asp-validation-for="ContactNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurposeOfVisit" class="control-label"></label>
+                <input asp-for="PurposeOfVisit" class="form-control" />
+                <span asp-validation-for="PurposeOfVisit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CheckInTime" class="control-label"></label>
+                <input asp-for="CheckInTime" class="form-control" />
+                <span asp-validation-for="CheckInTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CheckOutTime" class="control-label"></label>
+                <input asp-for="CheckOutTime" class="form-control" />
+                <span asp-validation-for="CheckOutTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HostId" class="control-label"></label>
+                <select asp-for="HostId" class ="form-control" asp-items="ViewBag.HostId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="BadgeId" class="control-label"></label>
+                <input asp-for="BadgeId" class="form-control" />
+                <span asp-validation-for="BadgeId" class="text-danger"></span>
+            </div>
+
+ 
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
