@@ -4,59 +4,92 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
 
-<h4>Employee</h4>
-<hr />
+<div class="card bg-light-info shadow-none position-relative overflow-hidden">
+    <div class="card-body px-4 py-3">
+        <div class="row align-items-center">
+            <div class="col-9">
+                <h4 class="fw-semibold mb-8">Employee Form</h4>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a class="text-muted" asp-controller="Employees" asp-action="Index">Employees</a>
+                        </li>
+                        <li class="breadcrumb-item" aria-current="page">Add Employee</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-3">
+                <div class="text-center mb-n5">
+                    <img src="../../dist/images/breadcrumb/ChatBc.png" alt="" class="img-fluid mb-n4">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="StaffNumber" class="control-label"></label>
-                <input asp-for="StaffNumber" class="form-control" />
-                <span asp-validation-for="StaffNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Surname" class="control-label"></label>
-                <input asp-for="Surname" class="form-control" />
-                <span asp-validation-for="Surname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Firstname" class="control-label"></label>
-                <input asp-for="Firstname" class="form-control" />
-                <span asp-validation-for="Firstname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Othername" class="control-label"></label>
-                <input asp-for="Othername" class="form-control" />
-                <span asp-validation-for="Othername" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DepartmentId" class="control-label"></label>
-                <select asp-for="DepartmentId" class="form-control" asp-items="ViewBag.DepartmentId"></select>
-            </div>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+    <div class="col-12">
+        <div class="card">
+            <div class="px-4 py-3 border-bottom">
+                <h5 class="card-title fw-semibold mb-0">Create New Employee</h5>
             </div>
-        </form>
+            <form asp-action="Create">
+
+                <div class="card-body p-4">
+                    <h5 class="fs-4 fw-semibold mb-4">Personal Info</h5>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="StaffNumber" class="form-label fw-semibold">Staff Number</label>
+                                <input type="text" class="form-control" id="exampleInputtext" asp-for="StaffNumber" placeholder="John">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Firstname" class="form-label fw-semibold">First Name</label>
+                                <input type="text" class="form-control" id="exampleInputtext" asp-for="Firstname" placeholder="John">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Surname" class="form-label fw-semibold">Surname</label>
+                                <input type="text" class="form-control" id="exampleInputtext" asp-for="Surname" placeholder="John">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Othername" class="form-label fw-semibold">Other Name</label>
+                                <input type="text" class="form-control" id="exampleInputtext" asp-for="Othername" placeholder="John">
+                            </div>
+                          
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                                <input type="text" class="form-control" id="exampleInputtext" asp-for="Email" placeholder="email@example.com">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Phone" class="form-label fw-semibold">Phone number</label>
+                                <input type="text" asp-for="Phone" class="form-control" id="Phone" placeholder="0541234567">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="DepartmentId" class="form-label fw-semibold">Language</label>
+                                <select class="form-select" asp-for="DepartmentId"  asp-items="ViewBag.DepartmentId" aria-label="Default select example">
+                                    <option selected="">Select Department</option>
+                                   
+                                </select>
+                            </div>
+                            
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center gap-3">
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                                <button class="btn btn-light-danger text-danger" asp-action="Index">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{

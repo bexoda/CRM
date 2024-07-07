@@ -4,76 +4,130 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<!-- --------------------------------------------------- -->
+<!-- datatable  Js -->
+<!-- --------------------------------------------------- -->
+<!-- --------------------------------------------------- -->
+<!--  table advance Start -->
+<!-- --------------------------------------------------- -->
+<div class="card bg-light-info shadow-none position-relative overflow-hidden">
+    <div class="card-body px-4 py-3">
+        <div class="row align-items-center">
+            <div class="col-9">
+                <h4 class="fw-semibold mb-8">Employee List</h4>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a class="text-muted" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="breadcrumb-item" aria-current="page">Employee List</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-3">
+                <div class="text-center mb-n5">
+                    <img src="~/dist/images/breadcrumb/ChatBc.png" alt="" class="img-fluid mb-n4">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Create New Button -->
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.StaffNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Surname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Firstname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Othername)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Department)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-           
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StaffNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Surname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Firstname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Othername)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Department.DepartmentName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+
+<section class="datatables">
+    <!-- File export -->
+    <div class="row">
+        <div class="col-12">
+            <!-- ---------------------
+                        start File export
+                    ---------------- -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-2">
+                        <h5 class="mb-0">File export</h5>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="file_export"
+                               class="table border table-striped table-bordered display text-nowrap">
+                            <thead>
+                                <!-- start row -->
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.First().StaffNumber)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.First().Surname)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.First().Firstname)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.First().Email)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.First().Phone)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.First().Department.DepartmentName)
+                                    </th>
+                                    
+                                    <th>Actions</th>
+                                </tr>
+                                <!-- end row -->
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.StaffNumber)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Surname)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Firstname)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Email)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Phone)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+                                        </td>
+                                        
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- ---------------------
+                        end File export
+                    ---------------- -->
+        </div>
+    </div>
+</section>
+<!-- --------------------------------------------------- -->
+<!--  table advance End -->
+<!-- --------------------------------------------------- -->
+@section Scripts {
+    <script src="~/dist/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+
+    <script src="~/dist/js/datatable/datatable-advanced.init.js"></script>
 }
-    </tbody>
-</table>
