@@ -30,16 +30,16 @@ namespace CRM.Entities
         public string PurposeOfVisit { get; set; }
 
         [Display(Name = "Check-in Time")]
-        public DateTime CheckInTime { get; set; } = DateTime.UtcNow;
+        public DateTime CheckInTime { get; set; }
 
         [Display(Name = "Check-out Time")]
         public DateTime? CheckOutTime { get; set; }
 
         [Display(Name = "Host")]
         [ForeignKey("HostId")]
-        public Employee Host { get; set; }
+        public Employee? Host { get; set; }
         [Display(Name = "Host ID")]
-        public int HostId { get; set; }
+        public int? HostId { get; set; }
 
         [Display(Name = "Badge ID")]
         [StringLength(50, ErrorMessage = "Badge ID must not exceed 50 characters.")]

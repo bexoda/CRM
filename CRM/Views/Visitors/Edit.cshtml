@@ -4,68 +4,96 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Visitor</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <input asp-for="CreatedDate" class="form-control" hidden />
-                <span asp-validation-for="Name" class="text-danger"></span>
+<div class="card bg-light-info shadow-none position-relative overflow-hidden">
+    <div class="card-body px-4 py-3">
+        <div class="row align-items-center">
+            <div class="col-9">
+                <h4 class="fw-semibold mb-8">Visitor Form</h4>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a class="text-muted" asp-controller="Visitors" asp-action="Index">Visitor</a>
+                        </li>
+                        <li class="breadcrumb-item" aria-current="page">Edit Visitor</li>
+                    </ol>
+                </nav>
             </div>
-            <div class="form-group">
-                <label asp-for="ContactNumber" class="control-label"></label>
-                <input asp-for="ContactNumber" class="form-control" />
-                <span asp-validation-for="ContactNumber" class="text-danger"></span>
+            <div class="col-3">
+                <div class="text-center mb-n5">
+                    <img src="~/dist/images/breadcrumb/ChatBc.png" alt="" class="img-fluid mb-n4">
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PurposeOfVisit" class="control-label"></label>
-                <input asp-for="PurposeOfVisit" class="form-control" />
-                <span asp-validation-for="PurposeOfVisit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CheckInTime" class="control-label"></label>
-                <input asp-for="CheckInTime" class="form-control" />
-                <span asp-validation-for="CheckInTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CheckOutTime" class="control-label"></label>
-                <input asp-for="CheckOutTime" class="form-control" />
-                <span asp-validation-for="CheckOutTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HostId" class="control-label"></label>
-                <select asp-for="HostId" class="form-control" asp-items="ViewBag.HostId"></select>
-                <span asp-validation-for="HostId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BadgeId" class="control-label"></label>
-                <input asp-for="BadgeId" class="form-control" />
-                <span asp-validation-for="BadgeId" class="text-danger"></span>
-            </div>
-
-
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="px-4 py-3 border-bottom">
+                <h5 class="card-title fw-semibold mb-0">Edit Visitor</h5>
+            </div>
+            <form asp-action="Edit">
+                <input type="hidden" asp-for="Id" />
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="Name" class="form-label fw-semibold">Name</label>
+                                <input type="text" class="form-control" asp-for="Name" placeholder="John">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="ContactNumber" class="form-label fw-semibold">Contact Number</label>
+                                <input type="text" class="form-control" asp-for="ContactNumber" placeholder="1234567890">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                                <input type="email" class="form-control" asp-for="Email" placeholder="example@gmail.com">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="PurposeOfVisit" class="form-label fw-semibold">Purpose of Visit</label>
+                                <textarea class="form-control" asp-for="PurposeOfVisit" placeholder="Type here ..."></textarea>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="CheckInTime" class="form-label fw-semibold">Check-In Time</label>
+                                <input type="datetime-local" class="form-control" asp-for="CheckInTime">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="CheckOutTime" class="form-label fw-semibold">Check-Out Time</label>
+                                <input type="datetime-local" class="form-control" asp-for="CheckOutTime">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="HostId" class="form-label fw-semibold">Host</label>
+                                @if (ViewData["HostName"] != null)
+                                {
+                                    <input type="text" class="form-control" value="@ViewData["HostName"]" disabled>
+                                    <input type="text" asp-for="HostId" value="@ViewData["HostId"]" hidden>
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" value="No host assigned" disabled>
+                                }
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="BadgeId" class="form-label fw-semibold">Badge Id</label>
+                                <input type="text" asp-for="BadgeId" class="form-control" placeholder="Badge Number">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center gap-3">
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                                <a class="btn btn-light-danger text-danger" asp-action="Index">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
 
 @section Scripts {
     @{

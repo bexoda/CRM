@@ -33,13 +33,6 @@ namespace CRM.Data
             modelBuilder.Entity<Appointment>()
                 .HasIndex(a => new { a.StaffId, a.AppointmentDate });
 
-            modelBuilder.Entity<Visitor>()
-                .HasIndex(v => v.Email)
-                .IsUnique();
-
-            modelBuilder.Entity<Visitor>()
-                .HasIndex(v => v.ContactNumber)
-                .IsUnique();
 
             // Configure relationship between AppUser and Employee
             modelBuilder.Entity<AppUser>()

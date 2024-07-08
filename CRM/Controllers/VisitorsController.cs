@@ -3,6 +3,7 @@ using CRM.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CRM.Controllers
 {
@@ -44,7 +45,22 @@ namespace CRM.Controllers
         // GET: Visitors/Create
         public IActionResult Create()
         {
-            ViewData["HostId"] = new SelectList(_context.Employees, "Id", "Email");
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the logged-in user's ID
+            var employee = _context.Users
+                .Where(u => u.Id == userId)
+                .Select(u => new { u.EmployeeId, u.Employee.Firstname, u.Employee.Surname })
+                .FirstOrDefault();
+
+            if (employee != null && _context.Employees.Any(e => e.Id == employee.EmployeeId))
+            {
+                ViewData["HostId"] = employee.EmployeeId;
+                ViewData["HostName"] = $"{employee.Firstname} {employee.Surname}";
+            }
+            else
+            {
+                ViewData["HostId"] = null;
+                ViewData["HostName"] = "No host assigned";
+            }
             return View();
         }
 
@@ -55,14 +71,34 @@ namespace CRM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Visitor visitor)
         {
-            visitor.CreatedDate = DateTime.UtcNow;
-            //if (ModelState.IsValid)
-            //{
-            _context.Add(visitor);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            // }
-            ViewData["HostId"] = new SelectList(_context.Employees, "Id", "Email", visitor.HostId);
+            // Retrieve the logged-in user's Employee ID
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the logged-in user's ID
+            var employee = _context.Users
+                .Where(u => u.Id == userId)
+                .Select(u => new { u.EmployeeId, u.Employee.Firstname, u.Employee.Surname })
+                .FirstOrDefault();
+
+            if (employee != null && _context.Employees.Any(e => e.Id == employee.EmployeeId))
+            {
+                visitor.HostId = employee.EmployeeId;
+                ViewData["HostId"] = employee.EmployeeId;
+                ViewData["HostName"] = $"{employee.Firstname} {employee.Surname}";
+            }
+            else
+            {
+                ModelState.AddModelError("", "The logged-in user does not have a valid Employee ID.");
+                ViewData["HostId"] = null;
+                ViewData["HostName"] = "No host assigned";
+            }
+
+            if (ModelState.IsValid)
+            {
+                visitor.CreatedDate = DateTime.UtcNow;
+                _context.Add(visitor);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
             return View(visitor);
         }
 
@@ -79,7 +115,33 @@ namespace CRM.Controllers
             {
                 return NotFound();
             }
-            ViewData["HostId"] = new SelectList(_context.Employees, "Id", "Email", visitor.HostId);
+
+            var host = await _context.Employees.FindAsync(visitor.HostId);
+            if (host != null)
+            {
+                ViewData["HostName"] = $"{host.Firstname} {host.Surname}";
+                ViewData["HostId"] = host.Id;
+            }
+            else
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the logged-in user's ID
+                var employee = _context.Users
+                    .Where(u => u.Id == userId)
+                    .Select(u => new { u.EmployeeId, u.Employee.Firstname, u.Employee.Surname })
+                    .FirstOrDefault();
+
+                if (employee != null && _context.Employees.Any(e => e.Id == employee.EmployeeId))
+                {
+                    ViewData["HostId"] = employee.EmployeeId;
+                    ViewData["HostName"] = $"{employee.Firstname} {employee.Surname}";
+                }
+                else
+                {
+                    ViewData["HostId"] = null;
+                    ViewData["HostName"] = "No host assigned";
+                }
+            }
+
             return View(visitor);
         }
 
@@ -88,36 +150,66 @@ namespace CRM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ContactNumber,Email,PurposeOfVisit,CheckInTime,CheckOutTime,HostId,BadgeId,IsPreRegistered,CreatedDate,UpdatedDate")] Visitor visitor)
+        public async Task<IActionResult> Edit(int id, Visitor visitor)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the logged-in user's ID
+            var employee = _context.Users
+                .Where(u => u.Id == userId)
+                .Select(u => new { u.EmployeeId, u.Employee.Firstname, u.Employee.Surname })
+                .FirstOrDefault();
+
+            if (employee != null && _context.Employees.Any(e => e.Id == employee.EmployeeId))
+            {
+                //visitor.HostId = employee.EmployeeId;
+                ViewData["HostId"] = employee.EmployeeId;
+                ViewData["HostName"] = $"{employee.Firstname} {employee.Surname}";
+            }
+            else
+            {
+                ViewData["HostId"] = null;
+                ViewData["HostName"] = "No host assigned";
+            }
+
             if (id != visitor.Id)
             {
                 return NotFound();
             }
 
-            //if (ModelState.IsValid)
-            //{
-            try
+            if (ModelState.IsValid)
             {
-                _context.Update(visitor);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    visitor.UpdatedDate = DateTime.UtcNow;
+                    _context.Update(visitor);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!VisitorExists(visitor.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException)
+
+            var host = await _context.Employees.FindAsync(visitor.HostId);
+            if (host != null)
             {
-                if (!VisitorExists(visitor.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                ViewData["HostName"] = $"{host.Firstname} {host.Surname}";
             }
-            return RedirectToAction(nameof(Index));
-            //}
-            ViewData["HostId"] = new SelectList(_context.Employees, "Id", "Email", visitor.HostId);
+            else
+            {
+                ViewData["HostName"] = "No host assigned";
+            }
+
             return View(visitor);
         }
+
 
         // GET: Visitors/Delete/5
         public async Task<IActionResult> Delete(int? id)
