@@ -96,6 +96,7 @@ namespace CRM.Controllers
                 visitor.CreatedDate = DateTime.UtcNow;
                 _context.Add(visitor);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Visitor created successfully"; 
                 return RedirectToAction(nameof(Index));
             }
 
@@ -194,6 +195,7 @@ namespace CRM.Controllers
                         throw;
                     }
                 }
+                TempData["success"] = "Visitor updated Sccessfully";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -242,6 +244,7 @@ namespace CRM.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["success"] = "Visitor deleted Sccessfully";
             return RedirectToAction(nameof(Index));
         }
 

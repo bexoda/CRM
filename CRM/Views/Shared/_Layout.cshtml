@@ -30,6 +30,7 @@
     <!-- Core Css -->
     <link id="themeColors" rel="stylesheet" href="~/dist/css/style.min.css" />
     <link rel="stylesheet" href="~/dist/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 </head>
 
 <body>
@@ -310,6 +311,7 @@
             <div class="container-fluid">
                 <div class="container">
                     <main role="main" class="pb-3">
+                        <partial name="_Notifications" />
                         @RenderBody()
                     </main>
                 </div>
@@ -469,7 +471,7 @@
     <script src="~/dist/libs/owl.carousel/dist/owl.carousel.min.js"></script>
     <script src="~/dist/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/dist/js/dashboard.js"></script>
-
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 

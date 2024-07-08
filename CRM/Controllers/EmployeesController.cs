@@ -58,14 +58,12 @@ namespace CRM.Controllers
             //employee.Department = _context.Departments.FirstOrDefault(e => e.Id == employee.DepartmentId);
             employee.CreatedDate = DateTime.UtcNow;
             ModelState.Remove("Department");
-            //if (ModelState.IsValid)
-            //{
+          
             _context.Add(employee);
             await _context.SaveChangesAsync();
+            TempData["success"] = "Employee deleted Sccessfully";
             return RedirectToAction(nameof(Index));
-            //}
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "DepartmentName", employee.DepartmentId);
-            return View(employee);
+           
         }
 
         // GET: Employees/Edit/5
@@ -116,6 +114,7 @@ namespace CRM.Controllers
                     throw;
                 }
             }
+            TempData["success"] = "Employee edited Sccessfully";
             return RedirectToAction(nameof(Index));
             //}
             ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "DepartmentName", employee.DepartmentId);
@@ -153,6 +152,7 @@ namespace CRM.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["success"] = "Employee deleted Sccessfully";
             return RedirectToAction(nameof(Index));
         }
 

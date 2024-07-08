@@ -62,6 +62,7 @@ namespace CRM.Controllers
             //{
             _context.Add(appointment);
             await _context.SaveChangesAsync();
+            TempData["success"] = "Appointment created Sccessfully";
             return RedirectToAction(nameof(Index));
             //}
             ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Company", appointment.ClientId);
@@ -117,6 +118,8 @@ namespace CRM.Controllers
                     throw;
                 }
             }
+
+            TempData["success"] = "Appointment updated Sccessfully"; 
             return RedirectToAction(nameof(Index));
             //}
             ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Company", appointment.ClientId);
@@ -156,6 +159,7 @@ namespace CRM.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["success"] = "Appointment deleted Sccessfully";
             return RedirectToAction(nameof(Index));
         }
 

@@ -58,6 +58,7 @@ namespace CRM.Controllers
             {
                 _context.Add(department);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Department created Sccessfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(department);
@@ -111,6 +112,7 @@ namespace CRM.Controllers
                         throw;
                     }
                 }
+                TempData["success"] = "Department edited Sccessfully";
                 return RedirectToAction(nameof(Index));
             }
             return View(department);
@@ -146,6 +148,7 @@ namespace CRM.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["success"] = "Department deleted Sccessfully";
             return RedirectToAction(nameof(Index));
         }
 
