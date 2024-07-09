@@ -2,21 +2,27 @@
 using CRM.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace CRM.Controllers
 {
     public class ClientsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ClientsController> _logger;
 
-        public ClientsController(ApplicationDbContext context)
+        public ClientsController(ApplicationDbContext context, ILogger<ClientsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Clients
         public async Task<IActionResult> Index()
         {
+            _logger.LogInformation("Fetching all clients");
             return View(await _context.Clients.ToListAsync());
         }
 
@@ -25,6 +31,7 @@ namespace CRM.Controllers
         {
             if (id == null)
             {
+                _logger.LogWarning("Client ID was null in Details");
                 return NotFound();
             }
 
@@ -32,6 +39,7 @@ namespace CRM.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (client == null)
             {
+                _logger.LogWarning($"Client not found with ID {id}");
                 return NotFound();
             }
 
@@ -45,19 +53,30 @@ namespace CRM.Controllers
         }
 
         // POST: Clients/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Client client)
         {
             client.CreatedDate = DateTime.UtcNow;
-            //if (ModelState.IsValid)
-            //{
-            _context.Add(client);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-            //}
+            client.DateRegistered = DateTime.UtcNow;
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Add(client);
+                    await _context.SaveChangesAsync();
+                    TempData["success"] = "Client created successfully";
+                    _logger.LogInformation("Client created successfully");
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while creating client");
+                    TempData["error"] = "Error occurred while creating client";
+                }
+            }
+
             return View(client);
         }
 
@@ -66,49 +85,62 @@ namespace CRM.Controllers
         {
             if (id == null)
             {
+                _logger.LogWarning("Client ID was null in Edit");
                 return NotFound();
             }
 
             var client = await _context.Clients.FindAsync(id);
             if (client == null)
             {
+                _logger.LogWarning($"Client not found with ID {id}");
                 return NotFound();
             }
             return View(client);
         }
 
         // POST: Clients/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Client client)
         {
             if (id != client.Id)
             {
+                _logger.LogWarning($"Client ID mismatch in Edit: {id} != {client.Id}");
                 return NotFound();
             }
+
             client.UpdatedDate = DateTime.UtcNow;
-            //if (ModelState.IsValid)
-            //{
-            try
+
+            if (ModelState.IsValid)
             {
-                _context.Update(client);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ClientExists(client.Id))
+                try
                 {
-                    return NotFound();
+                    _context.Update(client);
+                    await _context.SaveChangesAsync();
+                    TempData["success"] = "Client updated successfully";
+                    _logger.LogInformation("Client updated successfully");
+                    return RedirectToAction(nameof(Index));
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!ClientExists(client.Id))
+                    {
+                        _logger.LogWarning($"Client not found with ID {client.Id} during update");
+                        return NotFound();
+                    }
+                    else
+                    {
+                        _logger.LogError("Concurrency exception occurred while updating client");
+                        throw;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while updating client");
+                    TempData["error"] = "Error occurred while updating client";
                 }
             }
-            return RedirectToAction(nameof(Index));
-            //}
+
             return View(client);
         }
 
@@ -117,6 +149,7 @@ namespace CRM.Controllers
         {
             if (id == null)
             {
+                _logger.LogWarning("Client ID was null in Delete");
                 return NotFound();
             }
 
@@ -124,6 +157,7 @@ namespace CRM.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (client == null)
             {
+                _logger.LogWarning($"Client not found with ID {id}");
                 return NotFound();
             }
 
@@ -135,13 +169,28 @@ namespace CRM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var client = await _context.Clients.FindAsync(id);
-            if (client != null)
+            try
             {
-                _context.Clients.Remove(client);
+                var client = await _context.Clients.FindAsync(id);
+                if (client != null)
+                {
+                    _context.Clients.Remove(client);
+                    await _context.SaveChangesAsync();
+                    TempData["success"] = "Client deleted successfully";
+                    _logger.LogInformation("Client deleted successfully");
+                }
+                else
+                {
+                    _logger.LogWarning($"Client not found with ID {id} during deletion");
+                    TempData["error"] = "Client not found";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while deleting client");
+                TempData["error"] = "Error occurred while deleting client";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

@@ -3,21 +3,27 @@ using CRM.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 namespace CRM.Controllers
 {
     public class AppointmentsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<AppointmentsController> _logger;
 
-        public AppointmentsController(ApplicationDbContext context)
+        public AppointmentsController(ApplicationDbContext context, ILogger<AppointmentsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Appointments
         public async Task<IActionResult> Index()
         {
+            _logger.LogInformation("Fetching all appointments");
             var applicationDbContext = _context.Appointments.Include(a => a.Client).Include(a => a.Staff);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -27,6 +33,7 @@ namespace CRM.Controllers
         {
             if (id == null)
             {
+                _logger.LogWarning("Appointment ID was null in Details");
                 return NotFound();
             }
 
@@ -36,6 +43,7 @@ namespace CRM.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (appointment == null)
             {
+                _logger.LogWarning($"Appointment not found with ID {id}");
                 return NotFound();
             }
 
@@ -51,20 +59,29 @@ namespace CRM.Controllers
         }
 
         // POST: Appointments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Appointment appointment)
         {
             appointment.CreatedDate = DateTime.UtcNow;
-            //if (ModelState.IsValid)
-            //{
-            _context.Add(appointment);
-            await _context.SaveChangesAsync();
-            TempData["success"] = "Appointment created Sccessfully";
-            return RedirectToAction(nameof(Index));
-            //}
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Add(appointment);
+                    await _context.SaveChangesAsync();
+                    TempData["success"] = "Appointment created successfully";
+                    _logger.LogInformation("Appointment created successfully");
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while creating appointment");
+                    TempData["error"] = "Error occurred while creating appointment";
+                }
+            }
+
             ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Company", appointment.ClientId);
             ViewData["StaffId"] = new SelectList(_context.Employees, "Id", "Email", appointment.StaffId);
             return View(appointment);
@@ -75,12 +92,14 @@ namespace CRM.Controllers
         {
             if (id == null)
             {
+                _logger.LogWarning("Appointment ID was null in Edit");
                 return NotFound();
             }
 
             var appointment = await _context.Appointments.FindAsync(id);
             if (appointment == null)
             {
+                _logger.LogWarning($"Appointment not found with ID {id}");
                 return NotFound();
             }
             ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Company", appointment.ClientId);
@@ -89,39 +108,47 @@ namespace CRM.Controllers
         }
 
         // POST: Appointments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Appointment appointment)
         {
             if (id != appointment.Id)
             {
+                _logger.LogWarning($"Appointment ID mismatch in Edit: {id} != {appointment.Id}");
                 return NotFound();
             }
             appointment.UpdatedDate = DateTime.UtcNow;
-            //if (ModelState.IsValid)
-            //{
-            try
+
+            if (ModelState.IsValid)
             {
-                _context.Update(appointment);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AppointmentExists(appointment.Id))
+                try
                 {
-                    return NotFound();
+                    _context.Update(appointment);
+                    await _context.SaveChangesAsync();
+                    TempData["success"] = "Appointment updated successfully";
+                    _logger.LogInformation("Appointment updated successfully");
+                    return RedirectToAction(nameof(Index));
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!AppointmentExists(appointment.Id))
+                    {
+                        _logger.LogWarning($"Appointment not found with ID {appointment.Id} during update");
+                        return NotFound();
+                    }
+                    else
+                    {
+                        _logger.LogError("Concurrency exception occurred while updating appointment");
+                        throw;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while updating appointment");
+                    TempData["error"] = "Error occurred while updating appointment";
                 }
             }
 
-            TempData["success"] = "Appointment updated Sccessfully"; 
-            return RedirectToAction(nameof(Index));
-            //}
             ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Company", appointment.ClientId);
             ViewData["StaffId"] = new SelectList(_context.Employees, "Id", "Email", appointment.StaffId);
             return View(appointment);
@@ -132,6 +159,7 @@ namespace CRM.Controllers
         {
             if (id == null)
             {
+                _logger.LogWarning("Appointment ID was null in Delete");
                 return NotFound();
             }
 
@@ -141,6 +169,7 @@ namespace CRM.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (appointment == null)
             {
+                _logger.LogWarning($"Appointment not found with ID {id}");
                 return NotFound();
             }
 
@@ -152,14 +181,28 @@ namespace CRM.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var appointment = await _context.Appointments.FindAsync(id);
-            if (appointment != null)
+            try
             {
-                _context.Appointments.Remove(appointment);
+                var appointment = await _context.Appointments.FindAsync(id);
+                if (appointment != null)
+                {
+                    _context.Appointments.Remove(appointment);
+                    await _context.SaveChangesAsync();
+                    TempData["success"] = "Appointment deleted successfully";
+                    _logger.LogInformation("Appointment deleted successfully");
+                }
+                else
+                {
+                    _logger.LogWarning($"Appointment not found with ID {id} during deletion");
+                    TempData["error"] = "Appointment not found";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while deleting appointment");
+                TempData["error"] = "Error occurred while deleting appointment";
             }
 
-            await _context.SaveChangesAsync();
-            TempData["success"] = "Appointment deleted Sccessfully";
             return RedirectToAction(nameof(Index));
         }
 

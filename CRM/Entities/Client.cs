@@ -33,7 +33,7 @@ namespace CRM.Entities
         public string Address { get; set; }
 
         [Display(Name = "Date Registered")]
-        public DateTime DateRegistered { get; set; } = DateTime.UtcNow;
+        public DateTime DateRegistered { get; set; }
 
         [Display(Name = "Last Contact Date")]
         public DateTime? LastContactDate { get; set; }
@@ -43,7 +43,7 @@ namespace CRM.Entities
         public string Notes { get; set; }
 
         [Display(Name = "Created Date")]
-        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedDate { get; set; }
 
         [Display(Name = "Updated Date")]
         public DateTime? UpdatedDate { get; set; }

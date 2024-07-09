@@ -4,68 +4,91 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
 
-<h4>Client</h4>
-<hr />
+<div class="card bg-light-info shadow-none position-relative overflow-hidden">
+    <div class="card-body px-4 py-3">
+        <div class="row align-items-center">
+            <div class="col-9">
+                <h4 class="fw-semibold mb-8">Client Form</h4>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a class="text-muted" asp-controller="Clients" asp-action="Index">Clients</a>
+                        </li>
+                        <li class="breadcrumb-item" aria-current="page">Add Clients</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-3">
+                <div class="text-center mb-n5">
+                    <img src="../../dist/images/breadcrumb/ChatBc.png" alt="" class="img-fluid mb-n4">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ContactNumber" class="control-label"></label>
-                <input asp-for="ContactNumber" class="form-control" />
-                <span asp-validation-for="ContactNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company" class="control-label"></label>
-                <input asp-for="Company" class="form-control" />
-                <span asp-validation-for="Company" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateRegistered" class="control-label"></label>
-                <input asp-for="DateRegistered" class="form-control" />
-                <span asp-validation-for="DateRegistered" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastContactDate" class="control-label"></label>
-                <input asp-for="LastContactDate" class="form-control" />
-                <span asp-validation-for="LastContactDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <textarea asp-for="Notes" class="form-control"></textarea>
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+    <div class="col-12">
+        <div class="card">
+            <div class="px-4 py-3 border-bottom">
+                <h5 class="card-title fw-semibold mb-0">Create New Client</h5>
             </div>
-        </form>
+            <form asp-action="Create">
+
+                <div class="card-body p-4">
+                   
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="Name" class="form-label fw-semibold">Clients Name</label>
+                                <input type="text" class="form-control" id="exampleInputtext" asp-for="Name" placeholder="John">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="ContactNumber" class="form-label fw-semibold">Contact Number</label>
+                                <input type="text" class="form-control" id="exampleInputtext" asp-for="ContactNumber" placeholder="John">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                                <input type="text" class="form-control" id="exampleInputtext" asp-for="Email" placeholder="email@example.com">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Address" class="form-label fw-semibold">Address</label>
+                                <textarea type="text" asp-for="Address" class="form-control" id="Phone" placeholder="Address here ..."></textarea>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6">
+
+                            <div class="mb-4">
+                                <label asp-for="Company" class="form-label fw-semibold">Company Name</label>
+                                <input type="text" class="form-control" id="exampleInputtext" asp-for="Company" placeholder="Company Name">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label asp-for="Notes" class="form-label fw-semibold">Notes</label>
+                                <textarea type="text" asp-for="Notes" class="form-control" id="Phone" placeholder="Notes here ..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="d-flex align-items-center gap-3">
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                                <button class="btn btn-light-danger text-danger" asp-action="Index">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
