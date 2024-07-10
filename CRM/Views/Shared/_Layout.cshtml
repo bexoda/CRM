@@ -31,6 +31,7 @@
     <link id="themeColors" rel="stylesheet" href="~/dist/css/style.min.css" />
     <link rel="stylesheet" href="~/dist/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.3.0/build/css/intlTelInput.css">
 </head>
 
 <body>
@@ -161,7 +162,7 @@
                             <span class="hide-menu">Administration</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="#" aria-expanded="false">
+                            <a class="sidebar-link" asp-controller="Users" asp-action="Index" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-user"></i>
                                 </span>
@@ -169,7 +170,7 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="#" aria-expanded="false" disabled>
+                            <a class="sidebar-link" asp-controller="Roles" asp-action="Index" aria-expanded="false" disabled>
                                 <span>
                                     <i class="ti ti-user-circle"></i>
                                 </span>
@@ -472,6 +473,7 @@
     <script src="~/dist/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/dist/js/dashboard.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.3.0/build/js/intlTelInput.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 

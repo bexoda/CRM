@@ -1,0 +1,110 @@
+﻿@model crm.Models.ViewModels.UsersViewModel
+
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<div class="card bg-light-info shadow-none position-relative overflow-hidden">
+    <div class="card-body px-4 py-3">
+        <div class="row align-items-center">
+            <div class="col-9">
+                <h4 class="fw-semibold mb-8">User Form</h4>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a class="text-muted" asp-controller="Employees" asp-action="Index">Users</a>
+                        </li>
+                        <li class="breadcrumb-item" aria-current="page">Add User</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-3">
+                <div class="text-center mb-n5">
+                    <img src="../../dist/images/breadcrumb/ChatBc.png" alt="" class="img-fluid mb-n4">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="px-4 py-3 border-bottom">
+                <h5 class="card-title fw-semibold mb-0">Create New User</h5>
+            </div>
+            <form asp-action="Create">
+                <div class="card-body p-4">
+                    <h5 class="fs-4 fw-semibold mb-4">Personal Info</h5>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="UserName" class="form-label fw-semibold">User name</label>
+                                <input type="text" class="form-control" asp-for="UserName" placeholder="John">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                                <input type="email" class="form-control" asp-for="Email" placeholder="email@example.com">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Password" class="form-label fw-semibold">Password</label>
+                                <input type="password" class="form-control" asp-for="Password" placeholder="Password">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="EmployeeId" class="form-label fw-semibold">Employee</label>
+                                <select class="form-select" asp-for="EmployeeId" asp-items="ViewBag.Employees" aria-label="Default select example">
+                                    <option value="">Select Employee</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone number</label><br />
+                                <input type="tel" asp-for="PhoneNumber" class="form-control" id="phone" placeholder="0541234567">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="RoleId" class="form-label fw-semibold">Role</label>
+                                <select class="form-select" asp-for="RoleId" asp-items="ViewBag.Roles" aria-label="Default select example">
+                                    <option value="">Select Role</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center gap-3">
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                                <a class="btn btn-light-danger text-danger" asp-action="Index">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/js/intlTelInput.min.js"></script>
+    <script>
+        const input = document.querySelector("#phone");
+        const iti = window.intlTelInput(input, {
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/js/utils.js",
+            initialCountry: "auto",
+            geoIpLookup: function (success, failure) {
+                fetch("https://ipapi.co/json").then(function (response) {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Failed to load country');
+                }).then(function (data) {
+                    success(data.country_code);
+                }).catch(failure);
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function () {
+            input.value = iti.getNumber();
+        });
+    </script>
+}

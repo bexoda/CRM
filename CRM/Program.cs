@@ -18,11 +18,6 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     .AddDefaultUI();
 builder.Services.AddControllersWithViews();
 
-//builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
-//    options.SignIn.RequireConfirmedAccount = true)
-//    .AddEntityFrameworkStores<ApplicationDbContext>()
-//    .AddDefaultTokenProviders()
-//    .AddDefaultUI();
 
 var app = builder.Build();
 

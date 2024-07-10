@@ -1,7 +1,6 @@
 ﻿using CRM.Data;
 using CRM.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -96,7 +95,7 @@ namespace CRM.Controllers
                 visitor.CreatedDate = DateTime.UtcNow;
                 _context.Add(visitor);
                 await _context.SaveChangesAsync();
-                TempData["success"] = "Visitor created successfully"; 
+                TempData["success"] = "Visitor created successfully";
                 return RedirectToAction(nameof(Index));
             }
 

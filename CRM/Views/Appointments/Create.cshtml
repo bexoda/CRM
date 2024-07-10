@@ -4,64 +4,89 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Appointment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Subject" class="control-label"></label>
-                <input asp-for="Subject" class="form-control" />
-                <span asp-validation-for="Subject" class="text-danger"></span>
+<div class="card bg-light-info shadow-none position-relative overflow-hidden">
+    <div class="card-body px-4 py-3">
+        <div class="row align-items-center">
+            <div class="col-9">
+                <h4 class="fw-semibold mb-8">Appointment Form</h4>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a class="text-muted" asp-controller="Appointments" asp-action="Index">Appointments</a>
+                        </li>
+                        <li class="breadcrumb-item" aria-current="page">Add Appointment</li>
+                    </ol>
+                </nav>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+            <div class="col-3">
+                <div class="text-center mb-n5">
+                    <img src="../../dist/images/breadcrumb/ChatBc.png" alt="" class="img-fluid mb-n4">
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="AppointmentDate" class="control-label"></label>
-                <input asp-for="AppointmentDate" class="form-control" />
-                <span asp-validation-for="AppointmentDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" />
-                <span asp-validation-for="StartTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" />
-                <span asp-validation-for="EndTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClientId" class="control-label"></label>
-                <select asp-for="ClientId" class ="form-control" asp-items="ViewBag.ClientId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="StaffId" class="control-label"></label>
-                <select asp-for="StaffId" class ="form-control" asp-items="ViewBag.StaffId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-       
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="px-4 py-3 border-bottom">
+                <h5 class="card-title fw-semibold mb-0">Create New Appointment</h5>
+            </div>
+            <form asp-action="Create">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="Subject" class="form-label fw-semibold">Subject</label>
+                                <input type="text" class="form-control" asp-for="Subject" placeholder="Subject">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="Description" class="form-label fw-semibold">Description</label>
+                                <textarea class="form-control" asp-for="Description" placeholder="Description here ..."></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="AppointmentDate" class="form-label fw-semibold">Appointment Date</label>
+                                <input type="datetime-local" class="form-control" asp-for="AppointmentDate">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="StartTime" class="form-label fw-semibold">Start Time</label>
+                                <input type="time" asp-for="StartTime" class="form-control" value="22:33:00">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-4">
+                                <label asp-for="EndTime" class="form-label fw-semibold">End Time</label>
+                                <input type="time" class="form-control" asp-for="EndTime" value="22:33:00">
+                            </div>
+                            <div class="mb-4">
+                                <label asp-for="ClientId" class="form-label fw-semibold">Clients</label>
+                                <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientId"></select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex align-items-center gap-3">
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                                <a class="btn btn-light-danger text-danger" asp-action="Index">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            $('.timepicker').datetimepicker({
+                format: 'hh:mm a'
+            });
+        });
+    </script>
 }

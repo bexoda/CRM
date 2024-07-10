@@ -1,21 +1,23 @@
-﻿@model IEnumerable<CRM.Entities.Visitor>
+﻿@using crm.Models.ViewModels
+@model IEnumerable<UsersViewModel>
 
 @{
     ViewData["Title"] = "Index";
 }
 
 
+
 <div class="card bg-light-info shadow-none position-relative overflow-hidden">
     <div class="card-body px-4 py-3">
         <div class="row align-items-center">
             <div class="col-9">
-                <h4 class="fw-semibold mb-8">Visitor's List</h4>
+                <h4 class="fw-semibold mb-8">User List</h4>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a class="text-muted" asp-controller="Visitors" asp-action="Index">Home</a>
+                            <a class="text-muted" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="breadcrumb-item" aria-current="page">Visitors List</li>
+                        <li class="breadcrumb-item" aria-current="page">User List</li>
                     </ol>
                 </nav>
             </div>
@@ -50,26 +52,21 @@
                                 <!-- start row -->
                                 <tr>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.Name)
+                                        @Html.DisplayNameFor(model => model.First().Id)
                                     </th>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.ContactNumber)
-                                    </th>
-                                  
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.CheckInTime)
+                                        @Html.DisplayNameFor(model => model.First().UserName)
                                     </th>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.CheckOutTime)
+                                        @Html.DisplayNameFor(model => model.First().Email)
                                     </th>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.Host)
+                                        @Html.DisplayNameFor(model => model.First().PhoneNumber)
                                     </th>
                                     <th>
-                                        @Html.DisplayNameFor(model => model.BadgeId)
+                                        @Html.DisplayNameFor(model => model.First().RoleId)
                                     </th>
-                              
-                                        
+
                                     <th>Actions</th>
                                 </tr>
                                 <!-- end row -->
@@ -80,26 +77,22 @@
                                 {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Name)
+                                            @Html.DisplayFor(modelItem => item.Id)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.ContactNumber)
+                                            @Html.DisplayFor(modelItem => item.UserName)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.CheckInTime)
+                                            @Html.DisplayFor(modelItem => item.Email)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.CheckOutTime)
+                                            @Html.DisplayFor(modelItem => item.PhoneNumber)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Host.Fullname)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.BadgeId)
+                                            @Html.DisplayFor(modelItem => item.RoleId)
                                         </td>
 
                                         <td>
-                                    
                                             <a asp-action="Edit" asp-route-id="@item.Id" class="text-primary" title="Edit">   <i class="ti ti-edit"></i></a> |
                                             <a asp-action="Details" asp-route-id="@item.Id" class="text-primary" title="Details">  <i class="ti ti-info-square-rounded"></i></a> |
                                             <a asp-action="Delete" asp-route-id="@item.Id" class="text-primary" title="Delete">  <i class="ti ti-trash-x"></i></a>
@@ -112,9 +105,6 @@
                     </div>
                 </div>
             </div>
-            <!-- ---------------------
-                        end File export
-                    ---------------- -->
         </div>
     </div>
 </section>
