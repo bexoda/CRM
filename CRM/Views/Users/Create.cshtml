@@ -51,7 +51,7 @@
                             </div>
                             <div class="mb-4">
                                 <label asp-for="EmployeeId" class="form-label fw-semibold">Employee</label>
-                                <select class="form-select" asp-for="EmployeeId" asp-items="ViewBag.Employees" aria-label="Default select example">
+                                <select class="select2 form-control" style="width: 100%; height: 36px" asp-for="EmployeeId" asp-items="ViewBag.Employees" aria-label="Default select example">
                                     <option value="">Select Employee</option>
                                 </select>
                             </div>
@@ -86,6 +86,7 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.0.1/build/js/intlTelInput.min.js"></script>
+
     <script>
         const input = document.querySelector("#phone");
         const iti = window.intlTelInput(input, {
