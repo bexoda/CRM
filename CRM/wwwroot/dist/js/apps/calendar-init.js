@@ -111,7 +111,9 @@ document.addEventListener("DOMContentLoaded", function () {
       start: `${newDate.getFullYear()}-${getDynamicMonth()}-28`,
       extendedProps: { calendar: "Primary" },
     },
-  ];
+    ];
+
+
   /*=====================*/
   // Calendar Select fn.
   /*=====================*/
@@ -226,6 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
     getEvent.setExtendedProp("calendar", getModalUpdatedCheckedRadioBtnValue);
     myModal.hide();
   });
+
   /*=====================*/
   // Add Calender Event
   /*=====================*/
@@ -250,6 +253,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     myModal.hide();
   });
+
+
   /*=====================*/
   // Calendar Init
   /*=====================*/
